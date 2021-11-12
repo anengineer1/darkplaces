@@ -1849,6 +1849,7 @@ void CL_SendMove(void)
 		break;
 	case PROTOCOL_DARKPLACES6:
 	case PROTOCOL_DARKPLACES7:
+	case PROTOCOL_DARKPLACES8:
 		cl.cmd.predicted = cl_movement.integer != 0;
 		break;
 	default:
@@ -1880,6 +1881,7 @@ void CL_SendMove(void)
 		break;
 	case PROTOCOL_DARKPLACES6:
 	case PROTOCOL_DARKPLACES7:
+	case PROTOCOL_DARKPLACES8:
 		// FIXME: cl.cmd.buttons & 16 is +button5, Nexuiz/Xonotic specific
 		cl.cmd.crouch = (cl.cmd.buttons & 16) != 0;
 		break;
@@ -1958,6 +1960,7 @@ void CL_SendMove(void)
 	// PROTOCOL_DARKPLACES5  clc_move = 19 bytes total
 	// PROTOCOL_DARKPLACES6  clc_move = 52 bytes total
 	// PROTOCOL_DARKPLACES7  clc_move = 56 bytes total per move (can be up to 16 moves)
+	// PROTOCOL_DARKPLACES8  clc_move = 56 bytes total per move (can be up to 16 moves)
 	// PROTOCOL_QUAKEWORLD   clc_move = 34 bytes total (typically, but can reach 43 bytes, or even 49 bytes with roll)
 
 	// set prydon cursor info
@@ -2059,6 +2062,7 @@ void CL_SendMove(void)
 			MSG_WriteByte (&buf, cl.cmd.impulse);
 		case PROTOCOL_DARKPLACES6:
 		case PROTOCOL_DARKPLACES7:
+		case PROTOCOL_DARKPLACES8:
 			// set the maxusercmds variable to limit how many should be sent
 			maxusercmds = bound(1, cl_netrepeatinput.integer + 1, min(3, CL_MAX_USERCMDS));
 			// when movement prediction is off, there's not much point in repeating old input as it will just be ignored
@@ -2183,10 +2187,7 @@ void CL_SendMove(void)
 	in_impulse = 0;
 
 	if (cls.netcon->message.overflowed)
-	{
-		Con_Print("CL_SendMove: lost server connection\n");
-		CL_Disconnect();
-	}
+		CL_DisconnectEx(true, "Lost connection to server");
 }
 
 /*

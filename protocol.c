@@ -47,6 +47,7 @@ struct protocolversioninfo_s
 }
 protocolversioninfo[] =
 {
+	{ 3505, PROTOCOL_DARKPLACES8 , "DP8"},
 	{ 3504, PROTOCOL_DARKPLACES7 , "DP7"},
 	{ 3503, PROTOCOL_DARKPLACES6 , "DP6"},
 	{ 3502, PROTOCOL_DARKPLACES5 , "DP5"},
@@ -108,7 +109,7 @@ void Protocol_Names(char *buffer, size_t buffersize)
 	buffer[0] = 0;
 	for (i = 0;protocolversioninfo[i].name;i++)
 	{
-		if (i > 1)
+		if (i > 0)
 			strlcat(buffer, " ", buffersize);
 		strlcat(buffer, protocolversioninfo[i].name, buffersize);
 	}

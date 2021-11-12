@@ -1,5 +1,5 @@
 /*
-Copyright (C) 1996-1997 Id Software, Inc.
+Copyright (C) 2006-2021 DarkPlaces contributors
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -8,7 +8,7 @@ of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 See the GNU General Public License for more details.
 
@@ -17,26 +17,15 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
-// conproc.h
 
-#ifndef CONPROC_H
-#define CONPROC_H
+#ifndef INFOSTRING_H
+#define INFOSTRING_H
 
-#define CCOM_WRITE_TEXT		0x2
-// Param1 : Text
+#include "qtypes.h"
+#include <stdlib.h>
 
-#define CCOM_GET_TEXT		0x3
-// Param1 : Begin line
-// Param2 : End line
-
-#define CCOM_GET_SCR_LINES	0x4
-// No params
-
-#define CCOM_SET_SCR_LINES	0x5
-// Param1 : Number of lines
-
-void InitConProc (HANDLE hFile, HANDLE heventParent, HANDLE heventChild);
-void DeinitConProc (void);
+char *InfoString_GetValue(const char *buffer, const char *key, char *value, size_t valuelength);
+void InfoString_SetValue(char *buffer, size_t bufferlength, const char *key, const char *value);
+void InfoString_Print(char *buffer);
 
 #endif
-

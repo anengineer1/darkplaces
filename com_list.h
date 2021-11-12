@@ -67,14 +67,14 @@ typedef struct llist_s
 /*
  * Get the next element in the list
  */
-#define List_Next_Entry(pos, member) \
-	List_Entry((pos)->member.next, Q_typeof(*(pos)), member)
+#define List_Next_Entry(pos, type, member) \
+	List_Entry((pos)->member.next, type, member)
 
 /*
  * Get the prev element in the list
  */
-#define List_Prev_Entry(pos, member) \
-	List_Entry((pos)->member.prev, Q_typeof(*(pos)), member)
+#define List_Prev_Entry(pos, type, member) \
+	List_Entry((pos)->member.prev, type, member)
 
 /*
  * Iterate over a list
@@ -100,6 +100,7 @@ typedef struct llist_s
 #define List_For_Each_Safe(pos, n, head) \
 	for (pos = (head)->next, n = pos->next; pos != (head); \
 	     pos = n, n = pos->next)
+
 /*
  * Iterate over a list backwards, safe against removal of list entry
  */
@@ -107,6 +108,7 @@ typedef struct llist_s
 	for (pos = (head)->prev, n = pos->prev; \
 	     pos != (head); \
 	     pos = n, n = pos->prev)
+
 /*
  * Test if the entry points to the head of the list
  */
@@ -116,95 +118,95 @@ typedef struct llist_s
 /*
  * Iterate over a list of a given type
  */
-#define List_For_Each_Entry(pos, head, member) \
-	for (pos = List_First_Entry(head, Q_typeof(*pos), member); \
+#define List_For_Each_Entry(pos, head, type, member) \
+	for (pos = List_First_Entry(head, type, member); \
 	     !List_Entry_Is_Head(pos, head, member); \
-	     pos = List_Next_Entry(pos, member))
+	     pos = List_Next_Entry(pos, type, member))
 
 /*
  * Iterate over a list of a given type backwards
  */
-#define List_For_Each_Prev_Entry(pos, head, member) \
-	for (pos = List_Last_Entry(head, Q_typeof(*pos), member); \
+#define List_For_Each_Prev_Entry(pos, head, type, member) \
+	for (pos = List_Last_Entry(head, type, member); \
 	     !List_Entry_Is_Head(pos, head, member); \
-	     pos = List_Prev_Entry(pos, member))
+	     pos = List_Prev_Entry(pos, type, member))
 
 /*
  * Prepares a pos entry for use as a start point in List_For_Each_Entry_Continue()
  */
-#define List_Prepare_Entry(pos, head, member) \
-	((pos) ? : List_Entry(head, Q_typeof(*pos), member))
+#define List_Prepare_Entry(pos, head, type, member) \
+	((pos) ? : List_Entry(head, type, member))
 
 /*
  * Continue iteration over a list of a given type, after the current position
  */
-#define List_For_Each_Entry_Continue(pos, head, member) \
-	for (pos = List_Next_Entry(pos, member); \
+#define List_For_Each_Entry_Continue(pos, head, type, member) \
+	for (pos = List_Next_Entry(pos, type, member); \
 	     !List_Entry_Is_Head(pos, head, member); \
-	     pos = List_Next_Entry(pos, member))
+	     pos = List_Next_Entry(pos, type, member))
 
 /*
  * Continue iteration over a list of a given type backwards, after the current position
  */
-#define List_For_Each_Prev_Entry_Continue(pos, head, member) \
-	for (pos = List_Prev_Entry(pos, member); \
+#define List_For_Each_Prev_Entry_Continue(pos, head, type, member) \
+	for (pos = List_Prev_Entry(pos, type, member); \
 	     !List_Entry_Is_Head(pos, head, member); \
-	     pos = List_Prev_Entry(pos, member))
+	     pos = List_Prev_Entry(pos, type, member))
 
 /*
  * Continue iteration over a list of a given type, from the current position
  */
-#define List_For_Each_Entry_From(pos, head, member) \
+#define List_For_Each_Entry_From(pos, head, type, member) \
 	for (; !List_Entry_Is_Head(pos, head, member); \
-	     pos = List_Next_Entry(pos, member))
+	     pos = List_Next_Entry(pos, type, member))
 
 /*
  * Continue iteration over a list of a given type backwards, from the current position
  */
-#define List_For_Each_Prev_Entry_From(pos, head, member) \
+#define List_For_Each_Prev_Entry_From(pos, head, type, member) \
 	for (; !List_Entry_Is_Head(pos, head, member); \
-	     pos = List_Prev_Entry(pos, member))
+	     pos = List_Prev_Entry(pos, type, member))
 
 /*
  * Iterate over a list of a given type, safe against removal of list entry
  */
-#define List_For_Each_Entry_Safe(pos, n, head, member) \
-	for (pos = List_First_Entry(head, Q_typeof(*pos), member), \
-	     n = List_Next_Entry(pos, member); \
+#define List_For_Each_Entry_Safe(pos, n, head, type, member) \
+	for (pos = List_First_Entry(head, type, member), \
+	     n = List_Next_Entry(pos, type, member); \
 	     !List_Entry_Is_Head(pos, head, member); \
-	     pos = n, n = List_Next_Entry(n, member))
+	     pos = n, n = List_Next_Entry(n, type, member))
+
 /*
  * Continue iteration over a list of a given type, after the current position, safe against removal of list entry
  */
-#define List_For_Each_Entry_Safe_Continue(pos, n, head, member) \
-	for (pos = List_Next_Entry(pos, member), \
-	     n = List_Next_Entry(pos, member); \
+#define List_For_Each_Entry_Safe_Continue(pos, n, head, type, member) \
+	for (pos = List_Next_Entry(pos, type, member), \
+	     n = List_Next_Entry(pos, type, member); \
 	     !List_Entry_Is_Head(pos, head, member); \
-	     pos = n, n = List_Next_Entry(n, member))
+	     pos = n, n = List_Next_Entry(n, type, member))
 
 /*
  * Continue iteration over a list of a given type, from the current position, safe against removal of list entry
  */
-#define List_For_Each_Entry_Safe_From(pos, n, head, member) \
-	for (n = List_Next_Entry(pos, member); \
+#define List_For_Each_Entry_Safe_From(pos, n, head, type, member) \
+	for (n = List_Next_Entry(pos, type, member); \
 	     !List_Entry_Is_Head(pos, head, member); \
-	     pos = n, n = List_Next_Entry(n, member))
-
+	     pos = n, n = List_Next_Entry(n, type, member))
 
 /*
  * Iterate over a list of a given type backwards, safe against removal of list entry
  */
-#define List_For_Each_Prev_Entry_Safe(pos, n, head, member) \
-	for (pos = List_Last_Entry(head, Q_typeof(*pos), member), \
-	     n = List_Prev_Entry(pos, member); \
+#define List_For_Each_Prev_Entry_Safe(pos, n, head, type, member) \
+	for (pos = List_Last_Entry(head, type, member), \
+	     n = List_Prev_Entry(pos, type, member); \
 	     !List_Entry_Is_Head(pos, head, member); \
-	     pos = n, n = List_Prev_Entry(n, member))
+	     pos = n, n = List_Prev_Entry(n, type, member))
 
 /*
  * Reset a stale List_For_Each_Entry_Safe loop
  */
-#define List_Safe_Reset_Next(pos, n, member) \
-		n = List_Next_Entry(pos, member)
+#define List_Safe_Reset_Next(pos, n, type, member) \
+	n = List_Next_Entry(pos, type, member)
 
 static inline qbool List_Is_Empty(const llist_t *list)
 {
@@ -217,7 +219,7 @@ static inline qbool List_Is_Empty(const llist_t *list)
  */
 static inline void List_Create(llist_t *list)
 {
-	list->next = list->prev = NULL;
+	list->next = list->prev = list;
 }
 
 /*

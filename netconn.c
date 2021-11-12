@@ -2488,10 +2488,7 @@ void NetConn_ClientFrame(void)
 	NetConn_QueryQueueFrame();
 #endif
 	if (cls.netcon && host.realtime > cls.netcon->timeout && !sv.active)
-	{
-		Con_Print("Connection timed out\n");
-		CL_Disconnect();
-	}
+		CL_DisconnectEx(true, "Connection timed out");
 }
 
 static void NetConn_BuildChallengeString(char *buffer, int bufferlength)

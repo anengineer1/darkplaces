@@ -86,7 +86,7 @@ static void Cmd_Defer_f (cmd_state_t *cmd)
 			Con_Printf("No commands are pending.\n");
 		else
 		{
-			List_For_Each_Entry(current, &cbuf->deferred, list)
+			List_For_Each_Entry(current, &cbuf->deferred, cmd_input_t, list)
 				Con_Printf("-> In %9.2f: %s\n", current->delay, current->text);
 		}
 	}
@@ -394,7 +394,7 @@ void Cbuf_InsertText (cmd_state_t *cmd, const char *text)
 		Con_Print("Cbuf_InsertText: overflow\n");
 	else
 	{
-		Cbuf_LinkCreate(cmd, &llist, List_Entry(cbuf->start.next, cmd_input_t, list), text);
+		Cbuf_LinkCreate(cmd, &llist, (List_Is_Empty(&cbuf->start) ? NULL : List_Entry(cbuf->start.next, cmd_input_t, list)), text);
 		if(!List_Is_Empty(&llist))
 			List_Splice(&llist, &cbuf->start);
 	}
@@ -419,7 +419,7 @@ static void Cbuf_Execute_Deferred (cmd_buf_t *cbuf)
 		return;
 	cbuf->deferred_oldtime = host.realtime;
 
-	List_For_Each_Entry(current, &cbuf->deferred, list)
+	List_For_Each_Entry(current, &cbuf->deferred, cmd_input_t, list)
 	{
 		current->delay -= eat;
 		if(current->delay <= 0)
